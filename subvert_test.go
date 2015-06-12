@@ -40,18 +40,18 @@ var genMatcherTests = []struct {
 	{`a\tbc\n\ndef`, regexp.MustCompile("(a\tbc\n\ndef)")},
 
 	// multiple sequenses
-	{`a~b`, regexp.MustCompile("(a)(b)")},
-	{`a~~b~c`, regexp.MustCompile(`(a)()(b)(c)`)},
-	{`a~bc~def`, regexp.MustCompile("(a)(bc)(def)")},
-	{`a,b~c`, regexp.MustCompile("(a|b)(c)")},
-	{`~a`, regexp.MustCompile(`()(a)`)},
-	{`a~`, regexp.MustCompile(`(a)()`)},
-	{`~a~`, regexp.MustCompile(`()(a)()`)},
+	{`a/b`, regexp.MustCompile("(a)(b)")},
+	{`a//b/c`, regexp.MustCompile(`(a)()(b)(c)`)},
+	{`a/bc/def`, regexp.MustCompile("(a)(bc)(def)")},
+	{`a,b/c`, regexp.MustCompile("(a|b)(c)")},
+	{`/a`, regexp.MustCompile(`()(a)`)},
+	{`a/`, regexp.MustCompile(`(a)()`)},
+	{`/a/`, regexp.MustCompile(`()(a)()`)},
 
 	// multiple sequenses with escape
-	{`a~b\~c`, regexp.MustCompile("(a)(b~c)")},
-	{`a~\~bc\~~def`, regexp.MustCompile("(a)(~bc~)(def)")},
-	{`a\,b,c~d,e\~f`, regexp.MustCompile("(a,b|c)(d|e~f)")},
+	{`a/b\/c`, regexp.MustCompile("(a)(b/c)")},
+	{`a/\/bc\//def`, regexp.MustCompile("(a)(/bc/)(def)")},
+	{`a\,b,c/d,e\/f`, regexp.MustCompile("(a,b|c)(d|e/f)")},
 }
 
 func TestGenMatcher(t *testing.T) {
