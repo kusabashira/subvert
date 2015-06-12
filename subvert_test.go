@@ -29,6 +29,11 @@ var genMatcherTests = []struct {
 	// regexp quote
 	{`a+b`, regexp.MustCompile(`(a\+b)`)},
 	{`(a|bc)*def`, regexp.MustCompile(`(\(a\|bc\)\*def)`)},
+
+	// unquote special values
+	{`a\\bc`, regexp.MustCompile("(a\\\\bc)")},
+	{`a\tb\,c`, regexp.MustCompile("(a\tb,c)")},
+	{`a\tbc\n\ndef`, regexp.MustCompile("(a\tbc\n\ndef)")},
 }
 
 func TestGenMatcher(t *testing.T) {
