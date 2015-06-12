@@ -2,8 +2,11 @@ package main
 
 import (
 	"regexp"
+	"strings"
 )
 
 func newMatcher(pat string) (*regexp.Regexp, error) {
-	return regexp.Compile(pat)
+	sp := strings.Split(pat, ",")
+	pat2 := "(" + strings.Join(sp, "|") + ")"
+	return regexp.Compile(pat2)
 }
