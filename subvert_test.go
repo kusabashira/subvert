@@ -16,7 +16,11 @@ var genMatcherTests = []struct {
 
 	// multiple branches
 	{`a,b`, regexp.MustCompile(`(a|b)`)},
+	{`a,,b,c`, regexp.MustCompile(`(a||b|c)`)},
 	{`a,bc,def`, regexp.MustCompile(`(a|bc|def)`)},
+	{`,a`, regexp.MustCompile(`(|a)`)},
+	{`a,`, regexp.MustCompile(`(a|)`)},
+	{`,a,`, regexp.MustCompile(`(|a|)`)},
 
 	// use escape
 	{`a\,b`, regexp.MustCompile(`(a,b)`)},
@@ -37,8 +41,12 @@ var genMatcherTests = []struct {
 
 	// multiple sequenses
 	{`a~b`, regexp.MustCompile("(a)(b)")},
+	{`a~~b~c`, regexp.MustCompile(`(a)()(b)(c)`)},
 	{`a~bc~def`, regexp.MustCompile("(a)(bc)(def)")},
 	{`a,b~c`, regexp.MustCompile("(a|b)(c)")},
+	{`~a`, regexp.MustCompile(`()(a)`)},
+	{`a~`, regexp.MustCompile(`(a)()`)},
+	{`~a~`, regexp.MustCompile(`()(a)()`)},
 
 	// multiple sequenses with escape
 	{`a~b\~c`, regexp.MustCompile("(a)(b~c)")},
