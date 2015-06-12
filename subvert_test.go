@@ -10,17 +10,17 @@ var genMatcherTests = []struct {
 	src string
 	dst *regexp.Regexp
 }{
-	{"abc", regexp.MustCompile(`(abc)`)},
-	{"abcdef", regexp.MustCompile(`(abcdef)`)},
+	{`abc`, regexp.MustCompile(`(abc)`)},
+	{`abcdef`, regexp.MustCompile(`(abcdef)`)},
 
-	{"a,b", regexp.MustCompile(`(a|b)`)},
-	{"a,bc,def", regexp.MustCompile(`(a|bc|def)`)},
+	{`a,b`, regexp.MustCompile(`(a|b)`)},
+	{`a,bc,def`, regexp.MustCompile(`(a|bc|def)`)},
 
-	{"a\\,b", regexp.MustCompile(`(a,b)`)},
-	{"a\\,bc\\,def", regexp.MustCompile(`(a,bc,def)`)},
+	{`a\,b`, regexp.MustCompile(`(a,b)`)},
+	{`a\,bc\,def`, regexp.MustCompile(`(a,bc,def)`)},
 
-	{"a\\,b,c", regexp.MustCompile(`(a,b|c)`)},
-	{"a,bc\\,def", regexp.MustCompile(`(a|bc,def)`)},
+	{`a\,b,c`, regexp.MustCompile(`(a,b|c)`)},
+	{`a,bc\,def`, regexp.MustCompile(`(a|bc,def)`)},
 }
 
 func TestGenMatcher(t *testing.T) {
