@@ -11,7 +11,10 @@ var (
 
 func newMatcher(pat string) (*regexp.Regexp, error) {
 	sp := branches.FindAllString(pat, -1)
-	pat2 := "(" + strings.Join(sp, "|") + ")"
-	pat3 := strings.Replace(pat2, `\,`, `,`, -1)
-	return regexp.Compile(pat3)
+	for i := 0; i < len(sp); i++ {
+		sp[i] = strings.Replace(sp[i], `\,`, `,`, -1)
+		sp[i] = regexp.QuoteMeta(sp[i])
+	}
+	pat = "(" + strings.Join(sp, "|") + ")"
+	return regexp.Compile(pat)
 }
