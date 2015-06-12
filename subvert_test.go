@@ -39,6 +39,11 @@ var genMatcherTests = []struct {
 	{`a~b`, regexp.MustCompile("(a)(b)")},
 	{`a~bc~def`, regexp.MustCompile("(a)(bc)(def)")},
 	{`a,b~c`, regexp.MustCompile("(a|b)(c)")},
+
+	// multiple sequenses with escape
+	{`a~b\~c`, regexp.MustCompile("(a)(b~c)")},
+	{`a~\~bc\~~def`, regexp.MustCompile("(a)(~bc~)(def)")},
+	{`a\,b,c~d,e\~f`, regexp.MustCompile("(a,b|c)(d|e~f)")},
 }
 
 func TestGenMatcher(t *testing.T) {
