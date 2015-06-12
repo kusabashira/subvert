@@ -10,18 +10,23 @@ var genMatcherTests = []struct {
 	src string
 	dst *regexp.Regexp
 }{
+	// one branch
 	{`abc`, regexp.MustCompile(`(abc)`)},
 	{`abcdef`, regexp.MustCompile(`(abcdef)`)},
 
+	// multiple branches
 	{`a,b`, regexp.MustCompile(`(a|b)`)},
 	{`a,bc,def`, regexp.MustCompile(`(a|bc|def)`)},
 
+	// use escape
 	{`a\,b`, regexp.MustCompile(`(a,b)`)},
 	{`a\,bc\,def`, regexp.MustCompile(`(a,bc,def)`)},
 
+	// multiple branches with escape
 	{`a\,b,c`, regexp.MustCompile(`(a,b|c)`)},
 	{`a,bc\,def`, regexp.MustCompile(`(a|bc,def)`)},
 
+	// regexp quote
 	{`a+b`, regexp.MustCompile(`(a\+b)`)},
 	{`(a|bc)*def`, regexp.MustCompile(`(\(a\|bc\)\*def)`)},
 }
