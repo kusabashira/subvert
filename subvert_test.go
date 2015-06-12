@@ -10,7 +10,7 @@ var genMatcherTests = []struct {
 	src string
 	dst *regexp.Regexp
 }{
-	{"abc", regexp.MustCompile(`abc`)},
+	{"abc", regexp.MustCompile(`(abc)`)},
 
 	{"a,b", regexp.MustCompile(`(a|b)`)},
 }
