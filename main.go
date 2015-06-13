@@ -77,6 +77,7 @@ func _main() int {
 			printError(err)
 			return 1
 		}
+		return 0
 	}
 
 	var srcls []io.Reader
