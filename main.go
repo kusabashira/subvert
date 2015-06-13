@@ -18,10 +18,20 @@ Try 'subvert --help' for more information.
 func usage() {
 	os.Stderr.WriteString(`
 Usage: subvert [OPTION]... FROM TO [FILE]...
-Substitute multiple words at once.
+Substitute multiple words at once
+by FROM and TO patterns.
 
 Options:
-  -h, --help                show this help message
+  -h, --help        show this help message
+
+Syntax:
+  pattern = group {"/" group}
+  group   = branch {"," branch}
+  branch  = letter | "\/" | "\,"
+
+Examples:
+  subvert true,false false,true ./file
+  subvert dog,cat/s cat,dog/s ~/Document/questionnaire
 `[1:])
 }
 
