@@ -135,6 +135,78 @@ var genReplacementTests = []struct {
 			},
 		},
 	},
+
+	// multiple sequenses
+	{
+		"a/b",
+		"c/d",
+		[]map[string]string{
+			map[string]string{
+				"a": "c",
+			},
+			map[string]string{
+				"b": "d",
+			},
+		},
+	},
+	{
+		"a//b/c",
+		"d/e/f/g",
+		[]map[string]string{
+			map[string]string{
+				"a": "d",
+			},
+			map[string]string{
+				"": "e",
+			},
+			map[string]string{
+				"b": "f",
+			},
+			map[string]string{
+				"c": "g",
+			},
+		},
+	},
+	{
+		"a,b/c",
+		"d,e/f",
+		[]map[string]string{
+			map[string]string{
+				"a": "d",
+				"b": "e",
+			},
+			map[string]string{
+				"c": "f",
+			},
+		},
+	},
+	{
+		"/a",
+		"a/",
+		[]map[string]string{
+			map[string]string{
+				"": "a",
+			},
+			map[string]string{
+				"a": "",
+			},
+		},
+	},
+	{
+		"/a/",
+		"b/c/d",
+		[]map[string]string{
+			map[string]string{
+				"": "b",
+			},
+			map[string]string{
+				"a": "c",
+			},
+			map[string]string{
+				"": "d",
+			},
+		},
+	},
 }
 
 func TestGenReplacement(t *testing.T) {
