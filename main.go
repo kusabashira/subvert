@@ -84,7 +84,7 @@ func _main() int {
 		f, err := os.Open(name)
 		if err != nil {
 			printError(err)
-			os.Exit(1)
+			return 1
 		}
 		defer f.Close()
 		srcls = append(srcls, f)
