@@ -4,6 +4,13 @@ import (
 	"os"
 )
 
+func shortUsage() {
+	os.Stderr.WriteString(`
+Usage: subvert [OPTION]... FROM TO [FILE]...
+Try 'subvert --help' for more information.
+`[1:])
+}
+
 func usage() {
 	os.Stderr.WriteString(`
 Usage: subvert [OPTION]... FROM TO [FILE]...
