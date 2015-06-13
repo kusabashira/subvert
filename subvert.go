@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -42,4 +43,32 @@ func newMatcher(expr string) (m *regexp.Regexp, err error) {
 		sls[si] = "(" + strings.Join(bls, "|") + ")"
 	}
 	return regexp.Compile(strings.Join(sls, ""))
+}
+
+func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
+	from, err := parseExpr(exprFrom)
+	if err != nil {
+		return nil, err
+	}
+	to, err := parseExpr(exprTo)
+	if err != nil {
+		return nil, err
+	}
+	if len(from) != len(to) {
+		return nil, fmt.Errorf("mismatch the number of sequense")
+	}
+	r := make([]map[string]string, len(from))
+	for si := 0; si < len(from); si++ {
+		if len(from[si]) != len(to[si]) {
+			return nil, fmt.Errorf("mismatch the number of branch[%q]", si)
+		}
+		r[si] = make(map[string]string)
+		for bi := 0; bi < len(from[si]); bi++ {
+			if _, exist := r[si][from[si][bi]]; exist {
+				return nil, fmt.Errorf("branch[%q] has duplicate item", si)
+			}
+			r[si][from[si][bi]] = to[si][bi]
+		}
+	}
+	return r, nil
 }
