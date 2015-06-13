@@ -249,6 +249,26 @@ var replaceTests = []struct {
 		"a b c a b c",
 		"b b c b b c",
 	},
+
+	// multiple branches
+	{
+		"abc,def",
+		"def,abc",
+		"abc def",
+		"def abc",
+	},
+	{
+		"a,b,c,d",
+		"e,f,g,h",
+		"d c b a",
+		"h g f e",
+	},
+	{
+		"a, ",
+		" ,a",
+		"a a a",
+		" a a ",
+	},
 }
 
 func TestReplace(t *testing.T) {
