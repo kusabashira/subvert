@@ -98,3 +98,15 @@ func NewReplacer(from, to string) (r *Replacer, err error) {
 
 	return r, nil
 }
+
+func (r *Replacer) ReplaceAll(s string) string {
+	return r.matcher.ReplaceAllStringFunc(s, func(t string) string {
+		m := r.matcher.FindStringSubmatch(t)[1:]
+
+		a := make([]string, len(m))
+		for i, from := range m {
+			a[i] = r.replacement[i][from]
+		}
+		return strings.Join(a, "")
+	})
+}
