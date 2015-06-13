@@ -19,6 +19,7 @@ func parseExpr(expr string) ([][]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	sls := sequenses.FindAllString(expr, -1)
 	tree := make([][]string, len(sls))
 	for si := 0; si < len(sls); si++ {
@@ -38,6 +39,7 @@ func newMatcher(expr string) (m *regexp.Regexp, err error) {
 	if err != nil {
 		return nil, err
 	}
+
 	sls := make([]string, len(tree))
 	for si, bls := range tree {
 		sls[si] = "(" + strings.Join(bls, "|") + ")"
@@ -54,14 +56,17 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if len(from) != len(to) {
 		return nil, fmt.Errorf("mismatch the number of sequense")
 	}
+
 	r := make([]map[string]string, len(from))
 	for si := 0; si < len(from); si++ {
 		if len(from[si]) != len(to[si]) {
 			return nil, fmt.Errorf("mismatch the number of branch[%q]", si)
 		}
+
 		r[si] = make(map[string]string)
 		for bi := 0; bi < len(from[si]); bi++ {
 			if _, exist := r[si][from[si][bi]]; exist {
