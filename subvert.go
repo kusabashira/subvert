@@ -21,7 +21,7 @@ func parseExpr(expr string) ([][]string, error) {
 	}
 
 	gls := groups.FindAllString(expr, -1)
-	tree := make([][]string, len(sls))
+	tree := make([][]string, len(gls))
 	for gi := 0; gi < len(gls); gi++ {
 		bls := branches.FindAllString(gls[gi], -1)
 		for bi := 0; bi < len(bls); bi++ {
