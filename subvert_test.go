@@ -68,3 +68,32 @@ func TestGenMatcher(t *testing.T) {
 		}
 	}
 }
+
+var genReplacementTests = []struct {
+	srcFrom string
+	srcTo   string
+	dst     []map[string]string
+}{
+	{
+		"abc",
+		"def",
+		[]map[string]string{
+			map[string]string{"abc": "def"},
+		},
+	},
+}
+
+func TestGenReplacement(t *testing.T) {
+	for _, test := range genReplacementTests {
+		expect := test.dst
+		actual, err := newReplacement(test.srcFrom, test.srcTo)
+		if err != nil {
+			t.Errorf("NewSubvert(%q, %q) returns %q, want nil",
+				test.srcFrom, test.srcTo, err)
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Errorf("%q, %q: got %q, want %q",
+				test.srcFrom, test.srcTo, actual, expect)
+		}
+	}
+}
