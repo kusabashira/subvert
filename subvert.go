@@ -78,3 +78,23 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 	}
 	return r, nil
 }
+
+type Replacer struct {
+	matcher     *regexp.Regexp
+	replacement []map[string]string
+}
+
+func NewReplacer(from, to string) (r *Replacer, err error) {
+	r = &Replacer{}
+
+	r.matcher, err = newMatcher(from)
+	if err != nil {
+		return nil, err
+	}
+	r.replacement, err = newReplacement(from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
