@@ -223,3 +223,34 @@ func TestGenReplacement(t *testing.T) {
 		}
 	}
 }
+
+var replaceTests = []struct {
+	srcFrom string
+	srcTo   string
+	srcText string
+	dst     string
+}{
+	{
+		"abc",
+		"def",
+		"abc def",
+		"def def",
+	},
+}
+
+func TestReplace(t *testing.T) {
+	for _, test := range replaceTests {
+		r, err := NewReplacer(test.srcFrom, test.srcTo)
+		if err != nil {
+			t.Errorf("NewReplacer(%q, %q) returns %q, want nil",
+				test.srcFrom, test.srcTo, err)
+		}
+
+		expect := test.dst
+		actual := r.ReplaceAll(test.srcText)
+		if !reflect.DeepEqual(actual, expect) {
+			t.Errorf("NewReplacer(%q, %q): ReplaceAll(%q): got %q, want %q",
+				test.srcFrom, test.srcTo, test.srcText, actual, expect)
+		}
+	}
+}
