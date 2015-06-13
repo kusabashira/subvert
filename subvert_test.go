@@ -39,7 +39,7 @@ var genMatcherTests = []struct {
 	{`a\tb\,c`, regexp.MustCompile("(a\tb,c)")},
 	{`a\tbc\n\ndef`, regexp.MustCompile("(a\tbc\n\ndef)")},
 
-	// multiple sequenses
+	// multiple groups
 	{`a/b`, regexp.MustCompile("(a)(b)")},
 	{`a//b/c`, regexp.MustCompile(`(a)()(b)(c)`)},
 	{`a/bc/def`, regexp.MustCompile("(a)(bc)(def)")},
@@ -48,7 +48,7 @@ var genMatcherTests = []struct {
 	{`a/`, regexp.MustCompile(`(a)()`)},
 	{`/a/`, regexp.MustCompile(`()(a)()`)},
 
-	// multiple sequenses with escape
+	// multiple groups with escape
 	{`a/b\/c`, regexp.MustCompile("(a)(b/c)")},
 	{`a/\/bc\//def`, regexp.MustCompile("(a)(/bc/)(def)")},
 	{`a\,b,c/d,e\/f`, regexp.MustCompile("(a,b|c)(d|e/f)")},
@@ -136,7 +136,7 @@ var genReplacementTests = []struct {
 		},
 	},
 
-	// multiple sequenses
+	// multiple groups
 	{
 		"a/b",
 		"c/d",
@@ -270,7 +270,7 @@ var replaceTests = []struct {
 		" a a ",
 	},
 
-	// multiple sequenses
+	// multiple groups
 	{
 		"a/b",
 		"c/d",

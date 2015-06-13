@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	sequenses = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
-	branches  = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
+	groups   = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
+	branches = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
 )
 
 func parseExpr(expr string) ([][]string, error) {
@@ -20,16 +20,16 @@ func parseExpr(expr string) ([][]string, error) {
 		return nil, err
 	}
 
-	sls := sequenses.FindAllString(expr, -1)
+	gls := groups.FindAllString(expr, -1)
 	tree := make([][]string, len(sls))
-	for si := 0; si < len(sls); si++ {
-		bls := branches.FindAllString(sls[si], -1)
+	for gi := 0; gi < len(gls); gi++ {
+		bls := branches.FindAllString(gls[gi], -1)
 		for bi := 0; bi < len(bls); bi++ {
 			bls[bi] = strings.Replace(bls[bi], `\,`, `,`, -1)
 			bls[bi] = strings.Replace(bls[bi], `\/`, `/`, -1)
 			bls[bi] = regexp.QuoteMeta(bls[bi])
 		}
-		tree[si] = bls
+		tree[gi] = bls
 	}
 	return tree, nil
 }
@@ -41,8 +41,8 @@ func newMatcher(expr string) (m *regexp.Regexp, err error) {
 	}
 
 	sls := make([]string, len(tree))
-	for si, bls := range tree {
-		sls[si] = "(" + strings.Join(bls, "|") + ")"
+	for gi, bls := range tree {
+		sls[gi] = "(" + strings.Join(bls, "|") + ")"
 	}
 	return regexp.Compile(strings.Join(sls, ""))
 }
@@ -58,22 +58,22 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 	}
 
 	if len(from) != len(to) {
-		return nil, fmt.Errorf("mismatch the number of sequense")
+		return nil, fmt.Errorf("mismatch the number of group")
 	}
 
 	r := make([]map[string]string, len(from))
-	for si := 0; si < len(from); si++ {
-		if len(from[si]) != len(to[si]) {
-			return nil, fmt.Errorf("mismatch the number of branch[%q]", si)
+	for gi := 0; gi < len(from); gi++ {
+		if len(from[gi]) != len(to[gi]) {
+			return nil, fmt.Errorf("mismatch the number of group[%q]", gi)
 		}
 
-		r[si] = make(map[string]string)
-		for bi := 0; bi < len(from[si]); bi++ {
-			src, dst := from[si][bi], to[si][bi]
-			if _, exist := r[si][src]; exist {
-				return nil, fmt.Errorf("branch[%q] has duplicate item", si)
+		r[gi] = make(map[string]string)
+		for bi := 0; bi < len(from[gi]); bi++ {
+			src, dst := from[gi][bi], to[gi][bi]
+			if _, exist := r[gi][src]; exist {
+				return nil, fmt.Errorf("group[%q] has duplicate items", gi)
 			}
-			r[si][src] = dst
+			r[gi][src] = dst
 		}
 	}
 	return r, nil
