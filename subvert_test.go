@@ -230,11 +230,24 @@ var replaceTests = []struct {
 	srcText string
 	dst     string
 }{
+	// one branch
+	{
+		"abc",
+		"def",
+		"foo bar",
+		"foo bar",
+	},
 	{
 		"abc",
 		"def",
 		"abc def",
 		"def def",
+	},
+	{
+		"a",
+		"b",
+		"a b c a b c",
+		"b b c b b c",
 	},
 }
 
