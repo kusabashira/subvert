@@ -59,7 +59,7 @@ func TestGenMatcher(t *testing.T) {
 		expect := test.dst
 		actual, err := newMatcher(test.src)
 		if err != nil {
-			t.Errorf("NewSubvert(%q) returns %q, want nil",
+			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
 		}
 		if !reflect.DeepEqual(actual, expect) {
@@ -214,7 +214,7 @@ func TestGenReplacement(t *testing.T) {
 		expect := test.dst
 		actual, err := newReplacement(test.srcFrom, test.srcTo)
 		if err != nil {
-			t.Errorf("NewSubvert(%q, %q) returns %q, want nil",
+			t.Errorf("newReplacement(%q, %q) returns %q, want nil",
 				test.srcFrom, test.srcTo, err)
 		}
 		if !reflect.DeepEqual(actual, expect) {
@@ -249,7 +249,7 @@ func TestReplace(t *testing.T) {
 		expect := test.dst
 		actual := r.ReplaceAll(test.srcText)
 		if !reflect.DeepEqual(actual, expect) {
-			t.Errorf("NewReplacer(%q, %q): ReplaceAll(%q): got %q, want %q",
+			t.Errorf("Replacer{%q, %q}: %q: got %q, want %q",
 				test.srcFrom, test.srcTo, test.srcText, actual, expect)
 		}
 	}
