@@ -69,10 +69,11 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 
 		r[si] = make(map[string]string)
 		for bi := 0; bi < len(from[si]); bi++ {
-			if _, exist := r[si][from[si][bi]]; exist {
+			src, dst := from[si][bi], to[si][bi]
+			if _, exist := r[si][src]; exist {
 				return nil, fmt.Errorf("branch[%q] has duplicate item", si)
 			}
-			r[si][from[si][bi]] = to[si][bi]
+			r[si][src] = dst
 		}
 	}
 	return r, nil
