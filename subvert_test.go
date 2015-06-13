@@ -74,11 +74,65 @@ var genReplacementTests = []struct {
 	srcTo   string
 	dst     []map[string]string
 }{
+	// one branch
 	{
 		"abc",
 		"def",
 		[]map[string]string{
-			map[string]string{"abc": "def"},
+			map[string]string{
+				"abc": "def",
+			},
+		},
+	},
+	{
+		"abcdef",
+		"ghijkl",
+		[]map[string]string{
+			map[string]string{
+				"abcdef": "ghijkl",
+			},
+		},
+	},
+
+	// multiple branches
+	{
+		"a,b",
+		"b,a",
+		[]map[string]string{
+			map[string]string{
+				"a": "b",
+				"b": "a",
+			},
+		},
+	},
+	{
+		"a,,b,c",
+		"d,e,f,g",
+		[]map[string]string{
+			map[string]string{
+				"a": "d",
+				"":  "e",
+				"b": "f",
+				"c": "g",
+			},
+		},
+	},
+	{
+		",a",
+		"a,",
+		[]map[string]string{
+			map[string]string{"": "a", "a": ""},
+		},
+	},
+	{
+		"a,b,c",
+		",d,",
+		[]map[string]string{
+			map[string]string{
+				"a": "",
+				"b": "d",
+				"c": "",
+			},
 		},
 	},
 }
