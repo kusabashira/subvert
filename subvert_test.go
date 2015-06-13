@@ -269,6 +269,26 @@ var replaceTests = []struct {
 		"a a a",
 		" a a ",
 	},
+
+	// multiple sequenses
+	{
+		"a/b",
+		"c/d",
+		"aa ab ac ad",
+		"aa cd ac ad",
+	},
+	{
+		"a//b/c",
+		"d/e/f/g",
+		"abc bca cab",
+		"defg bca cab",
+	},
+	{
+		"dog,cat/s",
+		"cat,dog/s",
+		"cats cats dogs dogs cats",
+		"dogs dogs cats cats dogs",
+	},
 }
 
 func TestReplace(t *testing.T) {
