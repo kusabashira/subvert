@@ -34,7 +34,7 @@ func parseExpr(expr string) ([][]string, error) {
 	return tree, nil
 }
 
-func newMatcher(expr string) (m *regexp.Regexp, err error) {
+func newMatcher(expr string, useBoundary bool) (m *regexp.Regexp, err error) {
 	tree, err := parseExpr(expr)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,12 @@ func newMatcher(expr string) (m *regexp.Regexp, err error) {
 	for gi, bls := range tree {
 		sls[gi] = "(" + strings.Join(bls, "|") + ")"
 	}
-	return regexp.Compile(strings.Join(sls, ""))
+
+	re := strings.Join(sls, "")
+	if useBoundary {
+		re = `\b` + re + `\b`
+	}
+	return regexp.Compile(re)
 }
 
 func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
@@ -87,7 +92,7 @@ type Replacer struct {
 func NewReplacer(from, to string) (r *Replacer, err error) {
 	r = &Replacer{}
 
-	r.matcher, err = newMatcher(from)
+	r.matcher, err = newMatcher(from, false)
 	if err != nil {
 		return nil, err
 	}
