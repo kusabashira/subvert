@@ -89,10 +89,10 @@ type Replacer struct {
 	replacement []map[string]string
 }
 
-func NewReplacer(from, to string) (r *Replacer, err error) {
+func NewReplacer(from, to string, useBoundary bool) (r *Replacer, err error) {
 	r = &Replacer{}
 
-	r.matcher, err = newMatcher(from, false)
+	r.matcher, err = newMatcher(from, useBoundary)
 	if err != nil {
 		return nil, err
 	}
