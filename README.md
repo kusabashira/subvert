@@ -37,6 +37,28 @@ Installation
 
 	go get github.com/kusabashira/msub
 
+Syntax
+------
+
+Here is the syntax of msub in extended BNF. 
+
+	pattern = group {"/" group}
+	group   = branch {"," branch}
+	branch  = letter | "\/" | "\,"
+
+- FROM and TO is a `pattern`.
+- letter is a unicode character (ignore "/" and ",")
+
+In this way, It is unlike vim-abolish.
+Correspondence is as follows.
+
+| msub             | vim-abolish        |
+|------------------|--------------------|
+| foo              | foo                |
+| true,false       | {true,false}       |
+| dog,cat/s        | {dog,cat}s         |
+| ,f,s/print/,f,ln | {,f,s}print{,f,ln} |
+
 License
 -------
 
