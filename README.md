@@ -44,7 +44,7 @@ Here is the syntax of msub in extended BNF.
 
 	pattern = group {"/" group}
 	group   = branch {"," branch}
-	branch  = letter | "\/" | "\,"
+	branch  = {letter | "\/" | "\,"}
 
 - FROM and TO is a `pattern`.
 - letter is a unicode character (ignore "/" and ",")

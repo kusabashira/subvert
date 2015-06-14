@@ -27,7 +27,7 @@ Options:
 Syntax:
   pattern = group {"/" group}
   group   = branch {"," branch}
-  branch  = letter | "\/" | "\,"
+  branch  = {letter | "\/" | "\,"}
 
 Examples:
   msub true,false false,true ./file
