@@ -22,6 +22,7 @@ Substitute multiple words at once
 by FROM and TO patterns.
 
 Options:
+  -b, --boundary    use word boundary in matcher
   -h, --help        show this help message
 
 Syntax:
@@ -48,6 +49,10 @@ func do(r *Replacer, src io.Reader) error {
 }
 
 func _main() int {
+	var useBoundary bool
+	flag.BoolVar(&useBoundary, "b", false, "")
+	flag.BoolVar(&useBoundary, "boundary", false, "")
+
 	var isHelp bool
 	flag.BoolVar(&isHelp, "h", false, "")
 	flag.BoolVar(&isHelp, "help", false, "")
@@ -66,7 +71,7 @@ func _main() int {
 	}
 	from, to := flag.Arg(0), flag.Arg(1)
 
-	r, err := NewReplacer(from, to)
+	r, err := NewReplacer(from, to, useBoundary)
 	if err != nil {
 		printError(err)
 		return 2
