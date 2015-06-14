@@ -10,14 +10,14 @@ import (
 
 func shortUsage() {
 	os.Stderr.WriteString(`
-Usage: subvert [OPTION]... FROM TO [FILE]...
-Try 'subvert --help' for more information.
+Usage: msub [OPTION]... FROM TO [FILE]...
+Try 'msub --help' for more information.
 `[1:])
 }
 
 func usage() {
 	os.Stderr.WriteString(`
-Usage: subvert [OPTION]... FROM TO [FILE]...
+Usage: msub [OPTION]... FROM TO [FILE]...
 Substitute multiple words at once
 by FROM and TO patterns.
 
@@ -30,13 +30,13 @@ Syntax:
   branch  = letter | "\/" | "\,"
 
 Examples:
-  subvert true,false false,true ./file
-  subvert dog,cat/s cat,dog/s ~/Document/questionnaire
+  msub true,false false,true ./file
+  msub dog,cat/s cat,dog/s ~/Document/questionnaire
 `[1:])
 }
 
 func printError(err error) {
-	fmt.Fprintln(os.Stderr, "subvert:", err)
+	fmt.Fprintln(os.Stderr, "msub:", err)
 }
 
 func do(r *Replacer, src io.Reader) error {

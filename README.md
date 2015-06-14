@@ -1,5 +1,5 @@
-subvert
-=======
+msub
+====
 
 Substitute multiple words at once
 by FROM and TO patterns.
@@ -13,7 +13,7 @@ Its based on [tpope/vim-abolish](http://github.com/tpope/vim-abolish)
 	4 dog
 	5 cat
 
-	$ cat questionnaire | subvert cat,dog dog,cat
+	$ cat questionnaire | msub cat,dog dog,cat
 	1 dog
 	2 dog
 	3 cat
@@ -23,7 +23,7 @@ Its based on [tpope/vim-abolish](http://github.com/tpope/vim-abolish)
 Usage
 -----
 
-	$ subvert [OPTION]... FROM TO [FILE]...
+	$ msub [OPTION]... FROM TO [FILE]...
 	Substitute multiple words at once
 	by FROM and TO patterns.
 
@@ -35,7 +35,7 @@ Installation
 
 ###go get
 
-	go get github.com/kusabashira/subvert
+	go get github.com/kusabashira/msub
 
 License
 -------
