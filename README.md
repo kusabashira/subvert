@@ -4,7 +4,7 @@ msub
 Substitute multiple words at once
 by FROM and TO patterns.
 
-Its based on [tpope/vim-abolish](http://github.com/tpope/vim-abolish)
+It's inspired by [tpope/vim-abolish](http://github.com/tpope/vim-abolish)
 
 	$ cat questionnaire
 	1 cat
@@ -58,6 +58,8 @@ Correspondence is as follows.
 | true,false       | {true,false}       |
 | dog,cat/s        | {dog,cat}s         |
 | ,f,s/print/,f,ln | {,f,s}print{,f,ln} |
+
+If the replacement should be identical to the pattern
 
 License
 -------
