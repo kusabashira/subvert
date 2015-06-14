@@ -37,6 +37,48 @@ Installation
 
 	go get github.com/kusabashira/msub
 
+Behavior
+--------
+
+Pattern can be separated by a ",".
+
+Matched string will map to a string in the same index.
+
+	$ msub true,false false,true
+	true  -> false
+	false -> true
+
+	$ msub foo,bar,baz bar,baz,foo
+	foo -> bar
+	bar -> baz
+	baz -> foo
+
+In addition, pattern can connect, separated by a "/".
+
+Indexes are separately for each pattern.
+
+	$ msub cat,dog/,s
+	cat  -> dog
+	cats -> dogs
+	dog  -> cat
+	dogs -> cats
+
+	$ msub 'V,v/im/ ,/s,S/cript' 'V,V/im/S,S/cript'
+	Vim script -> Vim script
+	Vim Script -> Vim script
+	Vimscript  -> Vim script
+	VimScript  -> Vim script
+	vim script -> Vim script
+	vim Script -> Vim script
+	vimscript  -> Vim script
+	vimScript  -> Vim script
+
+###Inability now
+- loop pattern ( a,b -> a,b,a,b,a,b ... )
+- three case variants (box -> box, Box, BOX)
+
+vim-abolish can both.
+
 Syntax
 ------
 
