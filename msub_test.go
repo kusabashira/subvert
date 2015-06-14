@@ -57,7 +57,35 @@ var genMatcherTests = []struct {
 func TestGenMatcher(t *testing.T) {
 	for _, test := range genMatcherTests {
 		expect := test.dst
-		actual, err := newMatcher(test.src)
+		actual, err := newMatcher(test.src, false)
+		if err != nil {
+			t.Errorf("newMatcher(%q) returns %q, want nil",
+				test.src, err)
+		}
+		if !reflect.DeepEqual(actual, expect) {
+			t.Errorf("%q: got %q, want %q",
+				test.src, actual, expect)
+		}
+	}
+}
+
+var genMatcherWithBoundaryTests = []struct {
+	src string
+	dst *regexp.Regexp
+}{
+	{`abc`, regexp.MustCompile(`\b(abc)\b`)},
+	{`a,b`, regexp.MustCompile(`\b(a|b)\b`)},
+	{`a\,b,c`, regexp.MustCompile(`\b(a,b|c)\b`)},
+	{`a/b`, regexp.MustCompile(`\b(a)(b)\b`)},
+	{`a/bc/def`, regexp.MustCompile(`\b(a)(bc)(def)\b`)},
+	{`a,b/c`, regexp.MustCompile(`\b(a|b)(c)\b`)},
+	{`a\,b,c/d,e\/f`, regexp.MustCompile(`\b(a,b|c)(d|e/f)\b`)},
+}
+
+func TestGenMatcherWithBoundary(t *testing.T) {
+	for _, test := range genMatcherWithBoundaryTests {
+		expect := test.dst
+		actual, err := newMatcher(test.src, true)
 		if err != nil {
 			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
