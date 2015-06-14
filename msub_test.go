@@ -321,7 +321,7 @@ var replaceTests = []struct {
 
 func TestReplace(t *testing.T) {
 	for _, test := range replaceTests {
-		r, err := NewReplacer(test.srcFrom, test.srcTo)
+		r, err := NewReplacer(test.srcFrom, test.srcTo, false)
 		if err != nil {
 			t.Errorf("NewReplacer(%q, %q) returns %q, want nil",
 				test.srcFrom, test.srcTo, err)
