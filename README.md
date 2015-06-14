@@ -28,6 +28,7 @@ Usage
 	by FROM and TO patterns.
 
 	Options:
+	  -b, --boundary    use word boundary in matcher
 	  -h, --help        show this help message
 
 Installation
