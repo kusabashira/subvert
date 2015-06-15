@@ -96,12 +96,14 @@ Here is the syntax of msub in extended BNF.
 In this way, It is unlike vim-abolish.
 Correspondence is as follows.
 
-| msub             | vim-abolish        |
-|------------------|--------------------|
-| foo              | foo                |
-| true,false       | {true,false}       |
-| dog,cat/s        | {dog,cat}s         |
-| ,f,s/print/,f,ln | {,f,s}print{,f,ln} |
+| msub                 | vim-abolish        |
+|----------------------|--------------------|
+| foo                  | foo                |
+| true,false           | {true,false}       |
+| dog,cat/s            | {dog,cat}s         |
+| ,f,s/print/,f,ln     | {,f,s}print{,f,ln} |
+| a,b,a,b/a,a,a,a      | {a,b}{a}           |
+| V,V/im/ , /s,s/cript | {V}im{ }{s}cript   |
 
 If the replacement should be identical to the pattern
 
