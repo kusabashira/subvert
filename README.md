@@ -7,18 +7,18 @@ by FROM and TO patterns.
 It's inspired by [tpope/vim-abolish](http://github.com/tpope/vim-abolish)
 
 	$ cat questionnaire
-	1 cat
-	2 cat
-	3 dog
-	4 dog
-	5 cat
+	1 true
+	2 true
+	3 false
+	4 false
+	5 true
 
-	$ cat questionnaire | msub cat,dog dog,cat
-	1 dog
-	2 dog
-	3 cat
-	4 cat
-	5 dog
+	$ cat questionnaire | msub true,false false,true
+	1 false
+	2 false
+	3 true
+	4 true
+	5 false
 
 Usage
 -----
@@ -90,11 +90,10 @@ Here is the syntax of msub in extended BNF.
 	group   = branch {"," branch}
 	branch  = {letter | "\/" | "\,"}
 
-- FROM and TO is a `pattern`.
+- FROM and TO are `pattern`.
 - letter is a unicode character (ignore "/" and ",")
 
-In this way, It is unlike vim-abolish.
-Correspondence is as follows.
+Correspondence of vim-abolish is as follows.
 
 | msub                 | vim-abolish        |
 |----------------------|--------------------|
