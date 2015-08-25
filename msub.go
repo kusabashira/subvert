@@ -69,7 +69,7 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 	r := make([]map[string]string, len(from))
 	for gi := 0; gi < len(from); gi++ {
 		if len(from[gi]) != len(to[gi]) {
-			return nil, fmt.Errorf("mismatch the number of group[%q]", gi)
+			return nil, fmt.Errorf("mismatch the number of branch at group[%q]", gi)
 		}
 
 		r[gi] = make(map[string]string)
