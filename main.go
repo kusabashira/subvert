@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 )
 
@@ -49,27 +50,34 @@ func do(r *Replacer, src io.Reader) error {
 }
 
 func _main() int {
+	f := flag.NewFlagSet("msub", flag.ContinueOnError)
+	f.SetOutput(ioutil.Discard)
+
 	var useBoundary bool
-	flag.BoolVar(&useBoundary, "b", false, "")
-	flag.BoolVar(&useBoundary, "boundary", false, "")
+	f.BoolVar(&useBoundary, "b", false, "")
+	f.BoolVar(&useBoundary, "boundary", false, "")
 
 	var isHelp bool
-	flag.BoolVar(&isHelp, "h", false, "")
-	flag.BoolVar(&isHelp, "help", false, "")
-	flag.Usage = shortUsage
-	flag.Parse()
-	switch {
-	case isHelp:
+	f.BoolVar(&isHelp, "h", false, "")
+	f.BoolVar(&isHelp, "help", false, "")
+	if err := f.Parse(os.Args[1:]); err != nil {
+		printError(err)
+		return 2
+	}
+	if isHelp {
 		usage()
 		return 0
-	case flag.NArg() < 1:
+	}
+
+	switch f.NArg() {
+	case 0:
 		printError(fmt.Errorf("no specify FROM and TO"))
 		return 2
-	case flag.NArg() < 2:
+	case 1:
 		printError(fmt.Errorf("no specify TO"))
 		return 2
 	}
-	from, to := flag.Arg(0), flag.Arg(1)
+	from, to := f.Arg(0), f.Arg(1)
 
 	r, err := NewReplacer(from, to, useBoundary)
 	if err != nil {
@@ -77,7 +85,7 @@ func _main() int {
 		return 2
 	}
 
-	if flag.NArg() < 3 {
+	if f.NArg() < 3 {
 		if err = do(r, os.Stdin); err != nil {
 			printError(err)
 			return 1
@@ -86,7 +94,7 @@ func _main() int {
 	}
 
 	var srcls []io.Reader
-	for _, name := range flag.Args()[2:] {
+	for _, name := range f.Args()[2:] {
 		f, err := os.Open(name)
 		if err != nil {
 			printError(err)
