@@ -54,9 +54,9 @@ Matched string will map to a string in the same index.
 	bar -> baz
 	baz -> foo
 
-In addition, pattern can connect, separated by a "/".
+In addition, patterns can connect, separated by a "/".
 
-Indexes are separately for each pattern.
+Indexes are separately for each patterns.
 
 	$ msub cat,dog/,s dog,cat/,s
 	cat  -> dog
@@ -74,9 +74,9 @@ Indexes are separately for each pattern.
 	vimscript  -> Vim script
 	vimScript  -> Vim script
 
-###Inability now
+###Inability
 
-- loop pattern ( a,b -> a,b,a,b,a,b ... )
+- loop patterns ( a,b -> a,b,a,b,a,b ... )
 - three case variants (box -> box, Box, BOX)
 
 vim-abolish can both.
@@ -91,9 +91,9 @@ Here is the syntax of msub in extended BNF.
 	branch  = {letter | "\/" | "\,"}
 
 - FROM and TO are `pattern`.
-- letter is a unicode character (ignore "/" and ",")
+- letter is a unicode character (ignore "/" and ",").
 
-Correspondence of vim-abolish is as follows.
+Correspondence of vim-abolish is as follows:
 
 | msub                 | vim-abolish        |
 |----------------------|--------------------|
@@ -103,8 +103,6 @@ Correspondence of vim-abolish is as follows.
 | ,f,s/print/,f,ln     | {,f,s}print{,f,ln} |
 | a,b,a,b/a,a,a,a      | {a,b}{a}           |
 | V,V/im/ , /s,s/cript | {V}im{ }{s}cript   |
-
-If the replacement should be identical to the pattern
 
 License
 -------
