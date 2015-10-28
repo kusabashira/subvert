@@ -61,6 +61,7 @@ func TestGenMatcher(t *testing.T) {
 		if err != nil {
 			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
+			continue
 		}
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("%q: got %q, want %q",
@@ -89,6 +90,7 @@ func TestGenMatcherWithBoundary(t *testing.T) {
 		if err != nil {
 			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
+			continue
 		}
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("%q: got %q, want %q",
@@ -244,6 +246,7 @@ func TestGenReplacement(t *testing.T) {
 		if err != nil {
 			t.Errorf("newReplacement(%q, %q) returns %q, want nil",
 				test.srcFrom, test.srcTo, err)
+			continue
 		}
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("%q, %q: got %q, want %q",
@@ -325,6 +328,7 @@ func TestReplace(t *testing.T) {
 		if err != nil {
 			t.Errorf("NewReplacer(%q, %q) returns %q, want nil",
 				test.srcFrom, test.srcTo, err)
+			continue
 		}
 
 		expect := test.dst
