@@ -100,24 +100,24 @@ func TestGenMatcherWithBoundary(t *testing.T) {
 }
 
 var genReplacementTests = []struct {
-	srcFrom string
-	srcTo   string
-	dst     []map[string]string
+	from        string
+	to          string
+	replacement []map[string]string
 }{
 	// one branch
 	{
-		"abc",
-		"def",
-		[]map[string]string{
+		from: "abc",
+		to:   "def",
+		replacement: []map[string]string{
 			map[string]string{
 				"abc": "def",
 			},
 		},
 	},
 	{
-		"abcdef",
-		"ghijkl",
-		[]map[string]string{
+		from: "abcdef",
+		to:   "ghijkl",
+		replacement: []map[string]string{
 			map[string]string{
 				"abcdef": "ghijkl",
 			},
@@ -126,9 +126,9 @@ var genReplacementTests = []struct {
 
 	// multiple branches
 	{
-		"a,b",
-		"b,a",
-		[]map[string]string{
+		from: "a,b",
+		to:   "b,a",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "b",
 				"b": "a",
@@ -136,9 +136,9 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		"a,,b,c",
-		"d,e,f,g",
-		[]map[string]string{
+		from: "a,,b,c",
+		to:   "d,e,f,g",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "d",
 				"":  "e",
@@ -148,16 +148,16 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		",a",
-		"a,",
-		[]map[string]string{
+		from: ",a",
+		to:   "a,",
+		replacement: []map[string]string{
 			map[string]string{"": "a", "a": ""},
 		},
 	},
 	{
-		"a,b,c",
-		",d,",
-		[]map[string]string{
+		from: "a,b,c",
+		to:   ",d,",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "",
 				"b": "d",
@@ -168,9 +168,9 @@ var genReplacementTests = []struct {
 
 	// multiple groups
 	{
-		"a/b",
-		"c/d",
-		[]map[string]string{
+		from: "a/b",
+		to:   "c/d",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "c",
 			},
@@ -180,9 +180,9 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		"a//b/c",
-		"d/e/f/g",
-		[]map[string]string{
+		from: "a//b/c",
+		to:   "d/e/f/g",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "d",
 			},
@@ -198,9 +198,9 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		"a,b/c",
-		"d,e/f",
-		[]map[string]string{
+		from: "a,b/c",
+		to:   "d,e/f",
+		replacement: []map[string]string{
 			map[string]string{
 				"a": "d",
 				"b": "e",
@@ -211,9 +211,9 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		"/a",
-		"a/",
-		[]map[string]string{
+		from: "/a",
+		to:   "a/",
+		replacement: []map[string]string{
 			map[string]string{
 				"": "a",
 			},
@@ -223,9 +223,9 @@ var genReplacementTests = []struct {
 		},
 	},
 	{
-		"/a/",
-		"b/c/d",
-		[]map[string]string{
+		from: "/a/",
+		to:   "b/c/d",
+		replacement: []map[string]string{
 			map[string]string{
 				"": "b",
 			},
@@ -241,101 +241,101 @@ var genReplacementTests = []struct {
 
 func TestGenReplacement(t *testing.T) {
 	for _, test := range genReplacementTests {
-		expect := test.dst
-		actual, err := newReplacement(test.srcFrom, test.srcTo)
+		expect := test.replacement
+		actual, err := newReplacement(test.from, test.to)
 		if err != nil {
 			t.Errorf("newReplacement(%q, %q) returns %q, want nil",
-				test.srcFrom, test.srcTo, err)
+				test.from, test.to, err)
 			continue
 		}
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("%q, %q: got %q, want %q",
-				test.srcFrom, test.srcTo, actual, expect)
+				test.from, test.to, actual, expect)
 		}
 	}
 }
 
 var replaceTests = []struct {
-	srcFrom string
-	srcTo   string
-	srcText string
-	dst     string
+	from string
+	to   string
+	src  string
+	dst  string
 }{
 	// one branch
 	{
-		"abc",
-		"def",
-		"foo bar",
-		"foo bar",
+		from: "abc",
+		to:   "def",
+		src:  "foo bar",
+		dst:  "foo bar",
 	},
 	{
-		"abc",
-		"def",
-		"abc def",
-		"def def",
+		from: "abc",
+		to:   "def",
+		src:  "abc def",
+		dst:  "def def",
 	},
 	{
-		"a",
-		"b",
-		"a b c a b c",
-		"b b c b b c",
+		from: "a",
+		to:   "b",
+		src:  "a b c a b c",
+		dst:  "b b c b b c",
 	},
 
 	// multiple branches
 	{
-		"abc,def",
-		"def,abc",
-		"abc def",
-		"def abc",
+		from: "abc,def",
+		to:   "def,abc",
+		src:  "abc def",
+		dst:  "def abc",
 	},
 	{
-		"a,b,c,d",
-		"e,f,g,h",
-		"d c b a",
-		"h g f e",
+		from: "a,b,c,d",
+		to:   "e,f,g,h",
+		src:  "d c b a",
+		dst:  "h g f e",
 	},
 	{
-		"a, ",
-		" ,a",
-		"a a a",
-		" a a ",
+		from: "a, ",
+		to:   " ,a",
+		src:  "a a a",
+		dst:  " a a ",
 	},
 
 	// multiple groups
 	{
-		"a/b",
-		"c/d",
-		"aa ab ac ad",
-		"aa cd ac ad",
+		from: "a/b",
+		to:   "c/d",
+		src:  "aa ab ac ad",
+		dst:  "aa cd ac ad",
 	},
 	{
-		"a//b/c",
-		"d/e/f/g",
-		"abc bca cab",
-		"defg bca cab",
+		from: "a//b/c",
+		to:   "d/e/f/g",
+		src:  "abc bca cab",
+		dst:  "defg bca cab",
 	},
 	{
-		"dog,cat/s",
-		"cat,dog/s",
-		"cats cats dogs dogs cats",
-		"dogs dogs cats cats dogs",
+		from: "dog,cat/s",
+		to:   "cat,dog/s",
+		src:  "cats cats dogs dogs cats",
+		dst:  "dogs dogs cats cats dogs",
 	},
 }
 
 func TestReplace(t *testing.T) {
 	for _, test := range replaceTests {
-		r, err := NewReplacer(test.srcFrom, test.srcTo, false)
+		r, err := NewReplacer(test.from, test.to, false)
 		if err != nil {
 			t.Errorf("NewReplacer(%q, %q) returns %q, want nil",
-				test.srcFrom, test.srcTo, err)
+				test.from, test.to, err)
 			continue
 		}
 
 		expect := test.dst
-		actual := r.ReplaceAll(test.srcText)
+		actual := r.ReplaceAll(test.src)
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("Replacer{%q, %q}: %q: got %q, want %q",
-				test.srcFrom, test.srcTo, test.srcText, actual, expect)
+				test.from, test.to, test.src, actual, expect)
 		}
 	}
 }
