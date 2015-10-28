@@ -8,28 +8,27 @@ import (
 )
 
 var (
-	groups   = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
-	branches = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
+	group  = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
+	branch = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
 )
 
-func parseExpr(expr string) ([][]string, error) {
+func parseExpr(expr string) (tree [][]string, err error) {
 	expr = strings.Replace(expr, `\,`, `\\,`, -1)
 	expr = strings.Replace(expr, `\/`, `\\/`, -1)
-	expr, err := strconv.Unquote(`"` + expr + `"`)
+	expr, err = strconv.Unquote(`"` + expr + `"`)
 	if err != nil {
 		return nil, err
 	}
 
-	gls := groups.FindAllString(expr, -1)
-	tree := make([][]string, len(gls))
+	gls := group.FindAllString(expr, -1)
 	for gi := 0; gi < len(gls); gi++ {
-		bls := branches.FindAllString(gls[gi], -1)
+		bls := branch.FindAllString(gls[gi], -1)
 		for bi := 0; bi < len(bls); bi++ {
 			bls[bi] = strings.Replace(bls[bi], `\,`, `,`, -1)
 			bls[bi] = strings.Replace(bls[bi], `\/`, `/`, -1)
 			bls[bi] = regexp.QuoteMeta(bls[bi])
 		}
-		tree[gi] = bls
+		tree = append(tree, bls)
 	}
 	return tree, nil
 }
