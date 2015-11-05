@@ -9,13 +9,6 @@ import (
 	"os"
 )
 
-func shortUsage() {
-	os.Stderr.WriteString(`
-Usage: msub [OPTION]... FROM TO [FILE]...
-Try 'msub --help' for more information.
-`[1:])
-}
-
 func usage() {
 	os.Stderr.WriteString(`
 Usage: msub [OPTION]... FROM TO [FILE]...
