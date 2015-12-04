@@ -1,6 +1,8 @@
 msub
 ====
 
+[![Build Status](https://travis-ci.org/kusabashira/msub.svg?branch=master)](https://travis-ci.org/kusabashira/msub)
+
 Substitute multiple words at once
 by FROM and TO patterns.
 
