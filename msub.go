@@ -26,7 +26,6 @@ func parseExpr(expr string) (tree [][]string, err error) {
 		for bi := 0; bi < len(bls); bi++ {
 			bls[bi] = strings.Replace(bls[bi], `\,`, `,`, -1)
 			bls[bi] = strings.Replace(bls[bi], `\/`, `/`, -1)
-			bls[bi] = regexp.QuoteMeta(bls[bi])
 		}
 		tree = append(tree, bls)
 	}
@@ -41,6 +40,9 @@ func newMatcher(expr string, useBoundary bool) (m *regexp.Regexp, err error) {
 
 	sls := make([]string, len(tree))
 	for gi, bls := range tree {
+		for bi := 0; bi < len(bls); bi++ {
+			bls[bi] = regexp.QuoteMeta(bls[bi])
+		}
 		sls[gi] = "(" + strings.Join(bls, "|") + ")"
 	}
 
