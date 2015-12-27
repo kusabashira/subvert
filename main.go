@@ -18,6 +18,7 @@ by FROM and TO patterns.
 Options:
   -b, --boundary    use word boundary in matcher
   -h, --help        show this help message
+  -v, --version     output version information and exit
 
 Syntax:
   pattern = group {"/" group}
@@ -27,6 +28,12 @@ Syntax:
 Examples:
   msub true,false false,true ./file
   msub dog,cat/s cat,dog/s ~/Document/questionnaire
+`[1:])
+}
+
+func version() {
+	os.Stderr.WriteString(`
+0.1.0
 `[1:])
 }
 
@@ -53,12 +60,21 @@ func _main() int {
 	var isHelp bool
 	f.BoolVar(&isHelp, "h", false, "")
 	f.BoolVar(&isHelp, "help", false, "")
+
+	var isVersion bool
+	f.BoolVar(&isVersion, "v", false, "")
+	f.BoolVar(&isVersion, "version", false, "")
+
 	if err := f.Parse(os.Args[1:]); err != nil {
 		printError(err)
 		return 2
 	}
-	if isHelp {
+	switch {
+	case isHelp:
 		usage()
+		return 0
+	case isVersion:
+		version()
 		return 0
 	}
 
