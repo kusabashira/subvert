@@ -237,6 +237,30 @@ var genReplacementTests = []struct {
 			},
 		},
 	},
+
+	// special chars
+	{
+		from: "( , )",
+		to:   "(,)",
+		replacement: []map[string]string{
+			map[string]string{
+				"( ": "(",
+				" )": ")",
+			},
+		},
+	},
+	{
+		from: "^*/|$",
+		to:   "[+/?]",
+		replacement: []map[string]string{
+			map[string]string{
+				"^*": "[+",
+			},
+			map[string]string{
+				"|$": "?]",
+			},
+		},
+	},
 }
 
 func TestGenReplacement(t *testing.T) {
