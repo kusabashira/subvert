@@ -43,7 +43,7 @@ Installation
 Behavior
 --------
 
-Pattern can be separated by a ",".
+Pattern can be separated by a `,`.
 
 Matched string will map to a string in the same index.
 
@@ -56,7 +56,7 @@ Matched string will map to a string in the same index.
 	bar -> baz
 	baz -> foo
 
-In addition, patterns can connect, separated by a "/".
+In addition, patterns can connect, separated by a `/`.
 
 Indexes are separately for each patterns.
 
@@ -93,7 +93,7 @@ Here is the syntax of msub in extended BNF.
 	branch  = {letter | "\/" | "\,"}
 
 - FROM and TO are `pattern`.
-- letter is a unicode character (ignore "/" and ",").
+- letter is a unicode character (ignore `/` and `,`).
 
 Correspondence of vim-abolish is as follows:
 
