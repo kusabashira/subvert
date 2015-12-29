@@ -49,7 +49,7 @@ go get github.com/kusabashira/msub
 Behavior
 --------
 
-Pattern can be separated by a `,`.
+Pattern can be separated by `,`.
 
 Matched string will map to a string in the same index.
 
@@ -64,7 +64,7 @@ bar -> baz
 baz -> foo
 ```
 
-In addition, patterns can connect, separated by a `/`.
+In addition, patterns can connect, separated by `/`.
 
 Indexes are separately for each patterns.
 
@@ -89,7 +89,7 @@ vimScript  -> Vim script
 ###Inability
 
 - loop patterns ( a,b -> a,b,a,b,a,b ... )
-- three case variants (box -> box, Box, BOX)
+- three case variants ( box -> box, Box, BOX )
 
 vim-abolish can both.
 
@@ -104,8 +104,8 @@ group   = branch {"," branch}
 branch  = {letter | "\/" | "\,"}
 ```
 
-- FROM and TO are `pattern`.
-- letter is a unicode character (ignore `/` and `,`).
+- `FROM` and `TO` are `pattern`.
+- `letter` is a unicode character (ignore `/` and `,`).
 
 Correspondence of vim-abolish is as follows:
 
