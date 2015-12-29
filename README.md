@@ -35,6 +35,16 @@ by FROM and TO patterns.
 Options:
   -b, --boundary    use word boundary in matcher
   -h, --help        show this help message
+  -v, --version     output version information and exit
+
+Syntax:
+  pattern = group {"/" group}
+  group   = branch {"," branch}
+  branch  = {letter | "\/" | "\,"}
+
+Examples:
+  msub true,false false,true ./file
+  msub dog,cat/s cat,dog/s ~/Document/questionnaire
 ```
 
 Installation
