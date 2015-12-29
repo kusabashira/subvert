@@ -56,6 +56,34 @@ Installation
 go get github.com/kusabashira/msub
 ```
 
+Options
+-------
+
+### -h, --help
+
+Display the usage and exit.
+
+### -v, --version
+
+Output the version of msub.
+
+### -b, --boundary
+
+Replace only the string sandwiched word boundaries.
+
+```
+$ cat example
+n, x = line[0], line[1]
+
+$ cat example | msub n,x x,n
+(matches /(n|x)/)
+x, n = lixe[0], lixe[1]
+
+$ cat example | msub --boundary n,x x,n
+(matches /\b(n|x)\b/)
+x, n = line[0], line[1]
+```
+
 Behavior
 --------
 
