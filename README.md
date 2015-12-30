@@ -50,7 +50,7 @@ Examples:
 Installation
 ------------
 
-###go get
+### go get
 
 ```
 go get github.com/kusabashira/msub
@@ -124,7 +124,7 @@ vimscript  -> Vim script
 vimScript  -> Vim script
 ```
 
-###Inability
+### Inability
 
 - loop patterns ( a,b -> a,b,a,b,a,b ... )
 - three case variants ( box -> box, Box, BOX )
