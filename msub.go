@@ -70,14 +70,14 @@ func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
 	r := make([]map[string]string, len(from))
 	for gi := 0; gi < len(from); gi++ {
 		if len(from[gi]) != len(to[gi]) {
-			return nil, fmt.Errorf("mismatch the number of branch at group[%q]", gi)
+			return nil, fmt.Errorf("mismatch the number of branch at group[%d]", gi)
 		}
 
 		r[gi] = make(map[string]string)
 		for bi := 0; bi < len(from[gi]); bi++ {
 			src, dst := from[gi][bi], to[gi][bi]
 			if _, exist := r[gi][src]; exist {
-				return nil, fmt.Errorf("group[%q] has duplicate items", gi)
+				return nil, fmt.Errorf("group[%d] has duplicate items", gi)
 			}
 			r[gi][src] = dst
 		}
