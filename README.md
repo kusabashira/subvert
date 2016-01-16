@@ -50,6 +50,10 @@ Examples:
 Installation
 ------------
 
+### compiled binary
+
+See [releases](https://github.com/kusabashira/msub/releases)
+
 ### go get
 
 ```
