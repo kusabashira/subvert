@@ -138,7 +138,7 @@ vim-abolish can both.
 Syntax
 ------
 
-Here is the syntax of msub in extended BNF. 
+Here is the syntax of msub in extended BNF.
 
 ```
 pattern = group {"/" group}
