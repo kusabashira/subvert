@@ -51,7 +51,7 @@ func version() {
 `[1:])
 }
 
-func printError(err error) {
+func printError(err interface{}) {
 	fmt.Fprintln(os.Stderr, "msub:", err)
 }
 
@@ -79,10 +79,10 @@ func _main() int {
 
 	switch flagset.NArg() {
 	case 0:
-		printError(fmt.Errorf("no specify FROM and TO"))
+		printError("no specify FROM and TO")
 		return 2
 	case 1:
-		printError(fmt.Errorf("no specify TO"))
+		printError("no specify TO")
 		return 2
 	}
 	from, to := flagset.Arg(0), flagset.Arg(1)
