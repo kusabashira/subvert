@@ -10,9 +10,10 @@ import (
 )
 
 var (
+	name    = "msub"
 	version = "0.2.1"
 
-	flagset     = flag.NewFlagSet("msub", flag.ContinueOnError)
+	flagset     = flag.NewFlagSet(name, flag.ContinueOnError)
 	useBoundary = flagset.Bool("boundary", false, "")
 	isHelp      = flagset.Bool("help", false, "")
 	isVersion   = flagset.Bool("version", false, "")
@@ -26,8 +27,8 @@ func init() {
 }
 
 func usage() {
-	os.Stderr.WriteString(`
-Usage: msub [OPTION]... FROM TO [FILE]...
+	fmt.Fprintf(os.Stderr, `
+Usage: %[1]s [OPTION]... FROM TO [FILE]...
 Substitute multiple words at once
 by FROM and TO patterns.
 
@@ -42,9 +43,9 @@ Syntax:
   branch  = {letter | "\/" | "\,"}
 
 Examples:
-  msub true,false false,true ./file
-  msub dog,cat/s cat,dog/s ~/Document/questionnaire
-`[1:])
+  %[1]s true,false false,true ./file
+  %[1]s dog,cat/s cat,dog/s ~/Document/questionnaire
+`[1:], name)
 }
 
 func printVersion() {
@@ -52,7 +53,7 @@ func printVersion() {
 }
 
 func printError(err interface{}) {
-	fmt.Fprintln(os.Stderr, "msub:", err)
+	fmt.Fprintf(os.Stderr, "%s: %s\n", name, err)
 }
 
 func do(r *Replacer, src io.Reader) error {
@@ -102,14 +103,14 @@ func _main() int {
 	}
 
 	var srcls []io.Reader
-	for _, name := range flagset.Args()[2:] {
-		f, err := os.Open(name)
+	for _, file := range flagset.Args()[2:] {
+		src, err := os.Open(file)
 		if err != nil {
 			printError(err)
 			return 1
 		}
-		defer f.Close()
-		srcls = append(srcls, f)
+		defer src.Close()
+		srcls = append(srcls, src)
 	}
 	if err = do(r, io.MultiReader(srcls...)); err != nil {
 		printError(err)
