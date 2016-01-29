@@ -10,6 +10,8 @@ import (
 )
 
 var (
+	version = "0.2.1"
+
 	flagset     = flag.NewFlagSet("msub", flag.ContinueOnError)
 	useBoundary = flagset.Bool("boundary", false, "")
 	isHelp      = flagset.Bool("help", false, "")
@@ -46,9 +48,7 @@ Examples:
 }
 
 func printVersion() {
-	os.Stderr.WriteString(`
-0.2.1
-`[1:])
+	fmt.Fprintln(os.Stderr, version)
 }
 
 func printError(err interface{}) {
