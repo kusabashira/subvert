@@ -9,6 +9,20 @@ import (
 	"os"
 )
 
+var (
+	flagset     = flag.NewFlagSet("msub", flag.ContinueOnError)
+	useBoundary = flagset.Bool("boundary", false, "")
+	isHelp      = flagset.Bool("help", false, "")
+	isVersion   = flagset.Bool("version", false, "")
+)
+
+func init() {
+	flagset.SetOutput(ioutil.Discard)
+	flagset.BoolVar(useBoundary, "b", false, "")
+	flagset.BoolVar(isHelp, "h", false, "")
+	flagset.BoolVar(isVersion, "v", false, "")
+}
+
 func usage() {
 	os.Stderr.WriteString(`
 Usage: msub [OPTION]... FROM TO [FILE]...
@@ -50,35 +64,20 @@ func do(r *Replacer, src io.Reader) error {
 }
 
 func _main() int {
-	f := flag.NewFlagSet("msub", flag.ContinueOnError)
-	f.SetOutput(ioutil.Discard)
-
-	var useBoundary bool
-	f.BoolVar(&useBoundary, "b", false, "")
-	f.BoolVar(&useBoundary, "boundary", false, "")
-
-	var isHelp bool
-	f.BoolVar(&isHelp, "h", false, "")
-	f.BoolVar(&isHelp, "help", false, "")
-
-	var isVersion bool
-	f.BoolVar(&isVersion, "v", false, "")
-	f.BoolVar(&isVersion, "version", false, "")
-
-	if err := f.Parse(os.Args[1:]); err != nil {
+	if err := flagset.Parse(os.Args[1:]); err != nil {
 		printError(err)
 		return 2
 	}
 	switch {
-	case isHelp:
+	case *isHelp:
 		usage()
 		return 0
-	case isVersion:
+	case *isVersion:
 		version()
 		return 0
 	}
 
-	switch f.NArg() {
+	switch flagset.NArg() {
 	case 0:
 		printError(fmt.Errorf("no specify FROM and TO"))
 		return 2
@@ -86,15 +85,15 @@ func _main() int {
 		printError(fmt.Errorf("no specify TO"))
 		return 2
 	}
-	from, to := f.Arg(0), f.Arg(1)
+	from, to := flagset.Arg(0), flagset.Arg(1)
 
-	r, err := NewReplacer(from, to, useBoundary)
+	r, err := NewReplacer(from, to, *useBoundary)
 	if err != nil {
 		printError(err)
 		return 2
 	}
 
-	if f.NArg() < 3 {
+	if flagset.NArg() < 3 {
 		if err = do(r, os.Stdin); err != nil {
 			printError(err)
 			return 1
@@ -103,7 +102,7 @@ func _main() int {
 	}
 
 	var srcls []io.Reader
-	for _, name := range f.Args()[2:] {
+	for _, name := range flagset.Args()[2:] {
 		f, err := os.Open(name)
 		if err != nil {
 			printError(err)
