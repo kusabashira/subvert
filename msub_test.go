@@ -365,6 +365,14 @@ func TestReplace(t *testing.T) {
 	}
 }
 
+func BenchmarkStringsReplace(b *testing.B) {
+	src := strings.Repeat("aaa bbb\n", 1000)
+	rep := strings.NewReplacer("aaa", "bbb", "bbb", "aaa")
+	for i := 0; i < b.N; i++ {
+		rep.Replace(src)
+	}
+}
+
 func BenchmarkReplacerReplace(b *testing.B) {
 	src := strings.Repeat("aaa bbb\n", 1000)
 	from, to := "aaa,bbb", "bbb,aaa"
