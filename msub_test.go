@@ -3,6 +3,7 @@ package main
 import (
 	"reflect"
 	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -361,5 +362,18 @@ func TestReplace(t *testing.T) {
 			t.Errorf("Replacer{%q, %q}: %q: got %q, want %q",
 				test.from, test.to, test.src, actual, expect)
 		}
+	}
+}
+
+func BenchmarkReplacerReplace(b *testing.B) {
+	src := strings.Repeat("aaa bbb\n", 1000)
+	from, to := "aaa,bbb", "bbb,aaa"
+	r, err := NewReplacer(from, to, false)
+	if err != nil {
+		b.Fatalf("NewReplacer(%q, %q, false) returns %q, want nil",
+			from, to, err)
+	}
+	for i := 0; i < b.N; i++ {
+		r.ReplaceAll(src)
 	}
 }
