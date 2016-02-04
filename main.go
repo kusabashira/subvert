@@ -52,7 +52,7 @@ func printVersion() {
 	fmt.Fprintln(os.Stderr, version)
 }
 
-func printError(err interface{}) {
+func printErr(err interface{}) {
 	fmt.Fprintf(os.Stderr, "%s: %s\n", name, err)
 }
 
@@ -66,7 +66,7 @@ func do(r *Replacer, src io.Reader) error {
 
 func _main() int {
 	if err := flagset.Parse(os.Args[1:]); err != nil {
-		printError(err)
+		printErr(err)
 		return 2
 	}
 	switch {
@@ -80,23 +80,23 @@ func _main() int {
 
 	switch flagset.NArg() {
 	case 0:
-		printError("no specify FROM and TO")
+		printErr("no specify FROM and TO")
 		return 2
 	case 1:
-		printError("no specify TO")
+		printErr("no specify TO")
 		return 2
 	}
 	from, to := flagset.Arg(0), flagset.Arg(1)
 
 	r, err := NewReplacer(from, to, *useBoundary)
 	if err != nil {
-		printError(err)
+		printErr(err)
 		return 2
 	}
 
 	if flagset.NArg() < 3 {
 		if err = do(r, os.Stdin); err != nil {
-			printError(err)
+			printErr(err)
 			return 1
 		}
 		return 0
@@ -106,14 +106,14 @@ func _main() int {
 	for _, file := range flagset.Args()[2:] {
 		src, err := os.Open(file)
 		if err != nil {
-			printError(err)
+			printErr(err)
 			return 1
 		}
 		defer src.Close()
 		srcls = append(srcls, src)
 	}
 	if err = do(r, io.MultiReader(srcls...)); err != nil {
-		printError(err)
+		printErr(err)
 		return 1
 	}
 	return 0
