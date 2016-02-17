@@ -138,16 +138,15 @@ vim-abolish can both.
 Syntax
 ------
 
-Here is the syntax of msub in extended BNF.
+Here is the syntax of pattern in extended BNF.
 
 ```
-pattern = group {"/" group}
-group   = branch {"," branch}
-branch  = {letter | "\/" | "\,"}
+pattern = group , { "/" , group } ;
+group   = branch , { "," , branch } ;
+branch  = { ? unicode character ? - "/" - "," | "\/" | "\," } ;
 ```
 
-- `FROM` and `TO` are `pattern`.
-- `letter` is a unicode character (ignore `/` and `,`).
+`FROM` and `TO` are `pattern`.
 
 Correspondence of vim-abolish is as follows:
 
