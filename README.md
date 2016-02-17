@@ -34,7 +34,7 @@ by FROM and TO patterns.
 
 Options:
   -b, --boundary    use word boundary in matcher
-  -h, --help        show this help message
+  -h, --help        show this help message and exit
   -v, --version     output version information and exit
 
 Syntax:
