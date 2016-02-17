@@ -88,14 +88,14 @@ func _main() int {
 	}
 	from, to := flagset.Arg(0), flagset.Arg(1)
 
-	r, err := NewReplacer(from, to, *useBoundary)
+	rep, err := NewReplacer(from, to, *useBoundary)
 	if err != nil {
 		printErr(err)
 		return 2
 	}
 
 	if flagset.NArg() < 3 {
-		if err = do(r, os.Stdin); err != nil {
+		if err = do(rep, os.Stdin); err != nil {
 			printErr(err)
 			return 1
 		}
@@ -112,7 +112,7 @@ func _main() int {
 		defer src.Close()
 		srcls = append(srcls, src)
 	}
-	if err = do(r, io.MultiReader(srcls...)); err != nil {
+	if err = do(rep, io.MultiReader(srcls...)); err != nil {
 		printErr(err)
 		return 1
 	}
