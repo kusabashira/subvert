@@ -38,9 +38,9 @@ Options:
   -v, --version     output version information and exit
 
 Syntax:
-  pattern = group {"/" group}
-  group   = branch {"," branch}
-  branch  = {letter | "\/" | "\,"}
+  pattern = group , { "/" , group } ;
+  group   = branch , { "," , branch } ;
+  branch  = { ? unicode character ? - "/" - "," | "\/" | "\," } ;
 
 Examples:
   msub true,false false,true ./file
