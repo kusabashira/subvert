@@ -94,25 +94,24 @@ func _main() int {
 		return 2
 	}
 
+	var r io.Reader
 	if flagset.NArg() < 3 {
-		if err = do(rep, os.Stdin); err != nil {
-			printErr(err)
-			return 1
+		r = os.Stdin
+	} else {
+		var a []io.Reader
+		for _, file := range flagset.Args()[2:] {
+			f, err := os.Open(file)
+			if err != nil {
+				printErr(err)
+				return 1
+			}
+			defer f.Close()
+			a = append(a, f)
 		}
-		return 0
+		r = io.MultiReader(a...)
 	}
 
-	var srcls []io.Reader
-	for _, file := range flagset.Args()[2:] {
-		src, err := os.Open(file)
-		if err != nil {
-			printErr(err)
-			return 1
-		}
-		defer src.Close()
-		srcls = append(srcls, src)
-	}
-	if err = do(rep, io.MultiReader(srcls...)); err != nil {
+	if err = do(rep, r); err != nil {
 		printErr(err)
 		return 1
 	}
