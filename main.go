@@ -56,10 +56,10 @@ func printErr(err interface{}) {
 	fmt.Fprintf(os.Stderr, "%s: %s\n", name, err)
 }
 
-func do(r *Replacer, src io.Reader) error {
-	b := bufio.NewScanner(src)
+func do(rep *Replacer, r io.Reader) error {
+	b := bufio.NewScanner(r)
 	for b.Scan() {
-		fmt.Println(r.ReplaceAll(b.Text()))
+		fmt.Println(rep.ReplaceAll(b.Text()))
 	}
 	return b.Err()
 }
