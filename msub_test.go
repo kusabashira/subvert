@@ -35,10 +35,10 @@ var genMatcherTests = []struct {
 	{`a+b`, regexp.MustCompile(`(a\+b)`)},
 	{`(a|bc)*def`, regexp.MustCompile(`(\(a\|bc\)\*def)`)},
 
-	// unquote special values
-	{`a\\bc`, regexp.MustCompile("(a\\\\bc)")},
-	{`a\tb\,c`, regexp.MustCompile("(a\tb,c)")},
-	{`a\tbc\n\ndef`, regexp.MustCompile("(a\tbc\n\ndef)")},
+	// ignore backslash before character
+	{`a\\b\\c`, regexp.MustCompile("(a\\\\b\\\\c)")},
+	{`a\bc\de`, regexp.MustCompile("(abcde)")},
+	{`\t\n`, regexp.MustCompile("(tn)")},
 
 	// multiple groups
 	{`a/b`, regexp.MustCompile("(a)(b)")},
