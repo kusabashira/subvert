@@ -11,7 +11,7 @@ import (
 
 var (
 	name    = "msub"
-	version = "0.2.1"
+	version = "0.3.0"
 
 	flagset     = flag.NewFlagSet(name, flag.ContinueOnError)
 	useBoundary = flagset.Bool("boundary", false, "")
