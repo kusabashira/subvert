@@ -40,6 +40,11 @@ var genMatcherTests = []struct {
 	{`a\bc\de`, regexp.MustCompile("(abcde)")},
 	{`\t\n`, regexp.MustCompile("(tn)")},
 
+	// ignore backslash before end of string
+	{`\`, regexp.MustCompile("()")},
+	{`\\\`, regexp.MustCompile("(\\\\)")},
+	{`\\\\\`, regexp.MustCompile("(\\\\\\\\)")},
+
 	// multiple groups
 	{`a/b`, regexp.MustCompile("(a)(b)")},
 	{`a//b/c`, regexp.MustCompile(`(a)()(b)(c)`)},
