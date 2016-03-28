@@ -40,7 +40,7 @@ Options:
 Syntax:
   pattern = group , { "/" , group } ;
   group   = branch , { "," , branch } ;
-  branch  = { ? unicode character ? - "/" - "," | "\/" | "\," } ;
+  branch  = { [ "\" ] , ? unicode character ? - "/" - "," | "\/" | "\," } ;
 
 Examples:
   %[1]s true,false false,true ./file

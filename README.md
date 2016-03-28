@@ -40,7 +40,7 @@ Options:
 Syntax:
   pattern = group , { "/" , group } ;
   group   = branch , { "," , branch } ;
-  branch  = { ? unicode character ? - "/" - "," | "\/" | "\," } ;
+  branch  = { [ "\" ] , ? unicode character ? - "/" - "," | "\/" | "\," } ;
 
 Examples:
   msub true,false false,true ./file
