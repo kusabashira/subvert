@@ -1,3 +1,7 @@
+### v0.3.0 - 2016-03-28
+
+- Interpret "\n" as "n".
+
 ### v0.2.1 - 2016-01-12
 
 - Release compiled binary for Windows, OSX, and Linux.
