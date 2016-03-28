@@ -10,9 +10,13 @@ var (
 	group     = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
 	branch    = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
 	backslash = regexp.MustCompile(`\\(.)`)
+	trailing  = regexp.MustCompile(`\\+$`)
 )
 
 func parseExpr(expr string) (tree [][]string, err error) {
+	expr = trailing.ReplaceAllStringFunc(expr, func(s string) string {
+		return strings.Repeat(`\\`, len(s)/2)
+	})
 	gls := group.FindAllString(expr, -1)
 	for gi := 0; gi < len(gls); gi++ {
 		bls := branch.FindAllString(gls[gi], -1)
