@@ -143,7 +143,7 @@ Here is the syntax of pattern in extended BNF.
 ```
 pattern = group , { "/" , group } ;
 group   = branch , { "," , branch } ;
-branch  = { ? unicode character ? - "/" - "," | "\/" | "\," } ;
+branch  = { [ "\" ] , ? unicode character ? - "/" - "," | "\/" | "\," } ;
 ```
 
 `FROM` and `TO` are `pattern`.
