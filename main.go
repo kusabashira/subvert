@@ -69,20 +69,20 @@ func _main() int {
 		printErr(err)
 		return 2
 	}
-	switch {
-	case *isHelp:
+	if *isHelp {
 		usage()
 		return 0
-	case *isVersion:
+	}
+	if *isVersion {
 		printVersion()
 		return 0
 	}
 
-	switch flagset.NArg() {
-	case 0:
+	if flagset.NArg() < 1 {
 		printErr("no specify FROM and TO")
 		return 2
-	case 1:
+	}
+	if flagset.NArg() < 2 {
 		printErr("no specify TO")
 		return 2
 	}
