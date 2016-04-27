@@ -59,7 +59,7 @@ func printErr(err interface{}) {
 func do(rep *Replacer, r io.Reader) error {
 	b := bufio.NewScanner(r)
 	for b.Scan() {
-		fmt.Println(rep.ReplaceAll(b.Text()))
+		fmt.Println(rep.Replace(b.Text()))
 	}
 	return b.Err()
 }

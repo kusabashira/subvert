@@ -101,7 +101,7 @@ func NewReplacer(from, to string, useBoundary bool) (r *Replacer, err error) {
 	return r, nil
 }
 
-func (r *Replacer) ReplaceAll(s string) string {
+func (r *Replacer) Replace(s string) string {
 	return r.matcher.ReplaceAllStringFunc(s, func(t string) string {
 		m := r.matcher.FindStringSubmatch(t)[1:]
 

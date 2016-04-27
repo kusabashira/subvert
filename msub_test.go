@@ -362,7 +362,7 @@ func TestReplace(t *testing.T) {
 		}
 
 		expect := test.dst
-		actual := r.ReplaceAll(test.src)
+		actual := r.Replace(test.src)
 		if !reflect.DeepEqual(actual, expect) {
 			t.Errorf("Replacer{%q, %q}: %q: got %q, want %q",
 				test.from, test.to, test.src, actual, expect)
@@ -387,6 +387,6 @@ func BenchmarkReplacerReplace(b *testing.B) {
 			from, to, err)
 	}
 	for i := 0; i < b.N; i++ {
-		r.ReplaceAll(src)
+		r.Replace(src)
 	}
 }
