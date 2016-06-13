@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	name    = "msub"
+	cmdName = "msub"
 	version = "0.3.0"
 
-	flagset     = flag.NewFlagSet(name, flag.ContinueOnError)
+	flagset     = flag.NewFlagSet(cmdName, flag.ContinueOnError)
 	useBoundary = flagset.Bool("boundary", false, "")
 	isHelp      = flagset.Bool("help", false, "")
 	isVersion   = flagset.Bool("version", false, "")
@@ -45,7 +45,7 @@ Syntax:
 Examples:
   %[1]s true,false false,true ./file
   %[1]s dog,cat/s cat,dog/s ~/Document/questionnaire
-`[1:], name)
+`[1:], cmdName)
 }
 
 func printVersion() {
@@ -53,7 +53,7 @@ func printVersion() {
 }
 
 func printErr(err interface{}) {
-	fmt.Fprintf(os.Stderr, "%s: %s\n", name, err)
+	fmt.Fprintf(os.Stderr, "%s: %s\n", cmdName, err)
 }
 
 func do(rep *Replacer, r io.Reader) error {
