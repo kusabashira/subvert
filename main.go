@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	cmdName = "msub"
-	version = "0.3.0"
+	cmdName    = "msub"
+	cmdVersion = "0.3.0"
 
 	flagset     = flag.NewFlagSet(cmdName, flag.ContinueOnError)
 	useBoundary = flagset.Bool("boundary", false, "")
@@ -49,7 +49,7 @@ Examples:
 }
 
 func printVersion() {
-	fmt.Fprintln(os.Stderr, version)
+	fmt.Fprintln(os.Stderr, cmdVersion)
 }
 
 func printErr(err interface{}) {
