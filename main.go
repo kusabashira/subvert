@@ -26,7 +26,7 @@ func init() {
 	flagset.BoolVar(isVersion, "v", false, "")
 }
 
-func usage() {
+func printUsage() {
 	fmt.Fprintf(os.Stderr, `
 Usage: %[1]s [OPTION]... FROM TO [FILE]...
 Substitute multiple words at once
@@ -70,7 +70,7 @@ func _main() int {
 		return 2
 	}
 	if *isHelp {
-		usage()
+		printUsage()
 		return 0
 	}
 	if *isVersion {
