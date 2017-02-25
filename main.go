@@ -57,11 +57,20 @@ func printErr(err interface{}) {
 }
 
 func do(rep *Replacer, r io.Reader) error {
-	b := bufio.NewScanner(r)
-	for b.Scan() {
-		fmt.Println(rep.Replace(b.Text()))
+	bs := bufio.NewScanner(r)
+	bw := bufio.NewWriter(os.Stdout)
+	for bs.Scan() {
+		if _, err := bw.WriteString(rep.Replace(bs.Text()) + "\n"); err != nil {
+			return err
+		}
 	}
-	return b.Err()
+	if err := bs.Err(); err != nil {
+		return err
+	}
+	if err := bw.Flush(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func _main() int {
