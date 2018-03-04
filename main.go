@@ -122,31 +122,29 @@ func (c *CLI) Run(args []string) int {
 		return 2
 	}
 
+	exitCode := 0
 	if len(filePathes) == 0 {
 		if err = c.do(rep, c.stdin); err != nil {
 			c.printErr(err)
-			return 1
+			exitCode = 1
 		}
 	} else {
-		var rs []io.Reader
 		for _, filePath := range filePathes {
 			f, err := os.Open(filePath)
 			if err != nil {
 				c.printErr(err)
-				return 1
+				exitCode = 1
+				continue
 			}
 			defer f.Close()
 
-			rs = append(rs, f)
-		}
-
-		r := io.MultiReader(rs...)
-		if err = c.do(rep, r); err != nil {
-			c.printErr(err)
-			return 1
+			if err = c.do(rep, f); err != nil {
+				c.printErr(err)
+				exitCode = 1
+			}
 		}
 	}
-	return 0
+	return exitCode
 }
 
 func main() {
