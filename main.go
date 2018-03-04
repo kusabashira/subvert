@@ -9,25 +9,48 @@ import (
 	"os"
 )
 
-var (
+const (
 	cmdName    = "msub"
 	cmdVersion = "0.3.0"
-
-	flagset     = flag.NewFlagSet(cmdName, flag.ContinueOnError)
-	useBoundary = flagset.Bool("boundary", false, "")
-	isHelp      = flagset.Bool("help", false, "")
-	isVersion   = flagset.Bool("version", false, "")
 )
 
-func init() {
-	flagset.SetOutput(ioutil.Discard)
-	flagset.BoolVar(useBoundary, "b", false, "")
-	flagset.BoolVar(isHelp, "h", false, "")
-	flagset.BoolVar(isVersion, "v", false, "")
+type CLI struct {
+	stdin  io.Reader
+	stdout io.Writer
+	stderr io.Writer
+
+	useBoundary bool
+	isHelp      bool
+	isVersion   bool
 }
 
-func printUsage() {
-	fmt.Fprintf(os.Stderr, `
+func NewCLI(stdin io.Reader, stdout io.Writer, stderr io.Writer) *CLI {
+	return &CLI{
+		stdin:  stdin,
+		stdout: stdout,
+		stderr: stderr,
+	}
+}
+
+func (c *CLI) parseOptions(args []string) (leftArgs []string, err error) {
+	f := flag.NewFlagSet(cmdName, flag.ContinueOnError)
+	f.SetOutput(ioutil.Discard)
+
+	f.BoolVar(&c.useBoundary, "b", false, "")
+	f.BoolVar(&c.useBoundary, "boundary", false, "")
+	f.BoolVar(&c.isHelp, "h", false, "")
+	f.BoolVar(&c.isHelp, "help", false, "")
+	f.BoolVar(&c.isVersion, "v", false, "")
+	f.BoolVar(&c.isVersion, "version", false, "")
+
+	if err = f.Parse(args); err != nil {
+		return nil, err
+	}
+	return f.Args(), nil
+}
+
+func (c *CLI) printUsage() {
+	fmt.Fprintf(c.stderr, `
 Usage: %[1]s [OPTION]... FROM TO [FILE]...
 Substitute multiple words at once
 by FROM and TO patterns.
@@ -48,86 +71,86 @@ Examples:
 `[1:], cmdName)
 }
 
-func printVersion() {
-	fmt.Fprintln(os.Stderr, cmdVersion)
+func (c *CLI) printVersion() {
+	fmt.Fprintf(c.stderr, "%s\n", cmdVersion)
 }
 
-func printErr(err interface{}) {
-	fmt.Fprintf(os.Stderr, "%s: %s\n", cmdName, err)
+func (c *CLI) printErr(err interface{}) {
+	fmt.Fprintf(c.stderr, "%s: %s\n", cmdName, err)
 }
 
-func do(rep *Replacer, r io.Reader) error {
+func (c *CLI) do(rep *Replacer, r io.Reader) error {
 	bs := bufio.NewScanner(r)
-	bw := bufio.NewWriter(os.Stdout)
 	for bs.Scan() {
-		if _, err := bw.WriteString(rep.Replace(bs.Text()) + "\n"); err != nil {
-			return err
-		}
+		fmt.Fprintln(c.stdout, rep.Replace(bs.Text()))
 	}
-	if err := bs.Err(); err != nil {
-		return err
-	}
-	if err := bw.Flush(); err != nil {
-		return err
-	}
-	return nil
+	return bs.Err()
 }
 
-func _main() int {
-	if err := flagset.Parse(os.Args[1:]); err != nil {
-		printErr(err)
-		return 2
-	}
-	if *isHelp {
-		printUsage()
-		return 0
-	}
-	if *isVersion {
-		printVersion()
-		return 0
-	}
-
-	if flagset.NArg() < 1 {
-		printErr("no specify FROM and TO")
-		return 2
-	}
-	if flagset.NArg() < 2 {
-		printErr("no specify TO")
-		return 2
-	}
-	from, to := flagset.Arg(0), flagset.Arg(1)
-
-	rep, err := NewReplacer(from, to, *useBoundary)
+func (c *CLI) Run(args []string) int {
+	leftArgs, err := c.parseOptions(args)
 	if err != nil {
-		printErr(err)
+		c.printErr(err)
 		return 2
 	}
 
-	var r io.Reader
-	if flagset.NArg() < 3 {
-		r = os.Stdin
+	if c.isHelp {
+		c.printUsage()
+		return 0
+	}
+	if c.isVersion {
+		c.printVersion()
+		return 0
+	}
+
+	if len(leftArgs) < 1 {
+		c.printErr("no specify FROM and TO")
+		return 2
+	}
+	if len(leftArgs) < 2 {
+		c.printErr("no specify TO")
+		return 2
+	}
+
+	srcPattern := leftArgs[0]
+	dstPattern := leftArgs[1]
+	filePathes := leftArgs[2:]
+
+	rep, err := NewReplacer(srcPattern, dstPattern, c.useBoundary)
+	if err != nil {
+		c.printErr(err)
+		return 2
+	}
+
+	if len(filePathes) == 0 {
+		if err = c.do(rep, c.stdin); err != nil {
+			c.printErr(err)
+			return 1
+		}
 	} else {
-		var a []io.Reader
-		for _, file := range flagset.Args()[2:] {
-			f, err := os.Open(file)
+		var rs []io.Reader
+		for _, filePath := range filePathes {
+			f, err := os.Open(filePath)
 			if err != nil {
-				printErr(err)
+				c.printErr(err)
 				return 1
 			}
 			defer f.Close()
-			a = append(a, f)
-		}
-		r = io.MultiReader(a...)
-	}
 
-	if err = do(rep, r); err != nil {
-		printErr(err)
-		return 1
+			rs = append(rs, f)
+		}
+
+		r := io.MultiReader(rs...)
+		if err = c.do(rep, r); err != nil {
+			c.printErr(err)
+			return 1
+		}
 	}
 	return 0
 }
 
 func main() {
-	e := _main()
+	c := NewCLI(os.Stdin, os.Stdout, os.Stderr)
+	e := c.Run(os.Args[1:])
 	os.Exit(e)
 }
