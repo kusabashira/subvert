@@ -62,20 +62,20 @@ func toReplaceTable(srcPattern, dstPattern string) (table []map[string]string, e
 	}
 
 	if len(srcTree) != len(dstTree) {
-		return nil, fmt.Errorf("mismatch the number of group")
+		return nil, fmt.Errorf("mismatch the number of groups")
 	}
 
 	table = make([]map[string]string, len(srcTree))
 	for gi := 0; gi < len(srcTree); gi++ {
 		if len(srcTree[gi]) != len(srcTree[gi]) {
-			return nil, fmt.Errorf("mismatch the number of branch at group[%d]", gi)
+			return nil, fmt.Errorf("mismatch the number of branches at group[%d]", gi)
 		}
 
 		table[gi] = make(map[string]string)
 		for bi := 0; bi < len(srcTree[gi]); bi++ {
 			src, dst := srcTree[gi][bi], dstTree[gi][bi]
 			if _, exist := table[gi][src]; exist {
-				return nil, fmt.Errorf("group[%d] has duplicate items", gi)
+				return nil, fmt.Errorf("group[%d] has duplicated items", gi)
 			}
 			table[gi][src] = dst
 		}
