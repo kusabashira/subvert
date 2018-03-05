@@ -63,7 +63,7 @@ var genMatcherTests = []struct {
 func TestGenMatcher(t *testing.T) {
 	for _, test := range genMatcherTests {
 		expect := test.dst
-		actual, err := newMatcher(test.src, false)
+		actual, err := toPatternRegexp(test.src, false)
 		if err != nil {
 			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
@@ -92,7 +92,7 @@ var genMatcherWithBoundaryTests = []struct {
 func TestGenMatcherWithBoundary(t *testing.T) {
 	for _, test := range genMatcherWithBoundaryTests {
 		expect := test.dst
-		actual, err := newMatcher(test.src, true)
+		actual, err := toPatternRegexp(test.src, true)
 		if err != nil {
 			t.Errorf("newMatcher(%q) returns %q, want nil",
 				test.src, err)
@@ -272,7 +272,7 @@ var genReplacementTests = []struct {
 func TestGenReplacement(t *testing.T) {
 	for _, test := range genReplacementTests {
 		expect := test.replacement
-		actual, err := newReplacement(test.from, test.to)
+		actual, err := toReplaceTable(test.from, test.to)
 		if err != nil {
 			t.Errorf("newReplacement(%q, %q) returns %q, want nil",
 				test.from, test.to, err)

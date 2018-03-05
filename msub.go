@@ -7,93 +7,95 @@ import (
 )
 
 var (
-	group     = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
-	branch    = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
-	backslash = regexp.MustCompile(`\\(.)`)
-	trailing  = regexp.MustCompile(`\\+$`)
+	groupRegexp             = regexp.MustCompile(`(?:[^/\\]|\\.)*`)
+	branchRegexp            = regexp.MustCompile(`(?:[^,\\]|\\.)*`)
+	escapedCharacterRegexp  = regexp.MustCompile(`\\(.)`)
+	trailingBackslashRegexp = regexp.MustCompile(`\\+$`)
 )
 
-func parseExpr(expr string) (tree [][]string, err error) {
-	expr = trailing.ReplaceAllStringFunc(expr, func(s string) string {
+func parsePattern(pattern string) (tree [][]string, err error) {
+	pattern = trailingBackslashRegexp.ReplaceAllStringFunc(pattern, func(s string) string {
 		return strings.Repeat(`\\`, len(s)/2)
 	})
-	gls := group.FindAllString(expr, -1)
-	for gi := 0; gi < len(gls); gi++ {
-		bls := branch.FindAllString(gls[gi], -1)
-		for bi := 0; bi < len(bls); bi++ {
-			bls[bi] = backslash.ReplaceAllString(bls[bi], "$1")
+
+	groups := groupRegexp.FindAllString(pattern, -1)
+	for gi := 0; gi < len(groups); gi++ {
+		branches := branchRegexp.FindAllString(groups[gi], -1)
+		for bi := 0; bi < len(branches); bi++ {
+			branches[bi] = escapedCharacterRegexp.ReplaceAllString(branches[bi], "$1")
 		}
-		tree = append(tree, bls)
+		tree = append(tree, branches)
 	}
 	return tree, nil
 }
 
-func newMatcher(expr string, useBoundary bool) (m *regexp.Regexp, err error) {
-	tree, err := parseExpr(expr)
+func toPatternRegexp(srcPattern string, useBoundary bool) (re *regexp.Regexp, err error) {
+	srcTree, err := parsePattern(srcPattern)
 	if err != nil {
 		return nil, err
 	}
 
-	sls := make([]string, len(tree))
-	for gi, bls := range tree {
-		for bi := 0; bi < len(bls); bi++ {
-			bls[bi] = regexp.QuoteMeta(bls[bi])
+	quotedGroups := make([]string, len(srcTree))
+	for gi, branches := range srcTree {
+		quotedBranches := make([]string, len(branches))
+		for bi := 0; bi < len(branches); bi++ {
+			quotedBranches[bi] = regexp.QuoteMeta(branches[bi])
 		}
-		sls[gi] = "(" + strings.Join(bls, "|") + ")"
+		quotedGroups[gi] = "(" + strings.Join(quotedBranches, "|") + ")"
 	}
 
-	re := strings.Join(sls, "")
+	rawRegexp := strings.Join(quotedGroups, "")
 	if useBoundary {
-		re = `\b` + re + `\b`
+		rawRegexp = `\b` + rawRegexp + `\b`
 	}
-	return regexp.Compile(re)
+	return regexp.Compile(rawRegexp)
 }
 
-func newReplacement(exprFrom, exprTo string) ([]map[string]string, error) {
-	from, err := parseExpr(exprFrom)
+func toReplaceTable(srcPattern, dstPattern string) (table []map[string]string, err error) {
+	srcTree, err := parsePattern(srcPattern)
 	if err != nil {
 		return nil, err
 	}
-	to, err := parseExpr(exprTo)
+	dstTree, err := parsePattern(dstPattern)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(from) != len(to) {
+	if len(srcTree) != len(dstTree) {
 		return nil, fmt.Errorf("mismatch the number of group")
 	}
 
-	r := make([]map[string]string, len(from))
-	for gi := 0; gi < len(from); gi++ {
-		if len(from[gi]) != len(to[gi]) {
+	table = make([]map[string]string, len(srcTree))
+	for gi := 0; gi < len(srcTree); gi++ {
+		if len(srcTree[gi]) != len(srcTree[gi]) {
 			return nil, fmt.Errorf("mismatch the number of branch at group[%d]", gi)
 		}
 
-		r[gi] = make(map[string]string)
-		for bi := 0; bi < len(from[gi]); bi++ {
-			src, dst := from[gi][bi], to[gi][bi]
-			if _, exist := r[gi][src]; exist {
+		table[gi] = make(map[string]string)
+		for bi := 0; bi < len(srcTree[gi]); bi++ {
+			src, dst := srcTree[gi][bi], dstTree[gi][bi]
+			if _, exist := table[gi][src]; exist {
 				return nil, fmt.Errorf("group[%d] has duplicate items", gi)
 			}
-			r[gi][src] = dst
+			table[gi][src] = dst
 		}
 	}
-	return r, nil
+	return table, nil
 }
 
 type Replacer struct {
-	matcher     *regexp.Regexp
-	replacement []map[string]string
+	patternRegexp *regexp.Regexp
+	replaceTable  []map[string]string
 }
 
-func NewReplacer(from, to string, useBoundary bool) (r *Replacer, err error) {
+func NewReplacer(srcPattern string, dstPattern string, useBoundary bool) (r *Replacer, err error) {
 	r = &Replacer{}
 
-	r.matcher, err = newMatcher(from, useBoundary)
+	r.patternRegexp, err = toPatternRegexp(srcPattern, useBoundary)
 	if err != nil {
 		return nil, err
 	}
-	r.replacement, err = newReplacement(from, to)
+	r.replaceTable, err = toReplaceTable(srcPattern, dstPattern)
 	if err != nil {
 		return nil, err
 	}
@@ -102,13 +104,15 @@ func NewReplacer(from, to string, useBoundary bool) (r *Replacer, err error) {
 }
 
 func (r *Replacer) Replace(s string) string {
-	return r.matcher.ReplaceAllStringFunc(s, func(t string) string {
-		m := r.matcher.FindStringSubmatch(t)[1:]
-
-		a := make([]string, len(m))
-		for i, from := range m {
-			a[i] = r.replacement[i][from]
+	return r.patternRegexp.ReplaceAllStringFunc(s, func(t string) string {
+		// Submatch 0 is the match of the entire expression.
+		//
+		// See: https://golang.org/pkg/regexp/
+		//
+		groups := r.patternRegexp.FindStringSubmatch(t)[1:]
+		for gi := 0; gi < len(groups); gi++ {
+			groups[gi] = r.replaceTable[gi][groups[gi]]
 		}
-		return strings.Join(a, "")
+		return strings.Join(groups, "")
 	})
 }
