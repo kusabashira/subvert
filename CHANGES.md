@@ -1,3 +1,7 @@
+### v0.4.0 - 2018-03-05
+
+- Don't quit if an argument file doesn't exist.
+
 ### v0.3.0 - 2016-03-28
 
 - Interpret "\n" as "n".

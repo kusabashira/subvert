@@ -11,7 +11,7 @@ import (
 
 const (
 	cmdName    = "msub"
-	cmdVersion = "0.3.0"
+	cmdVersion = "0.4.0"
 )
 
 type CLI struct {
