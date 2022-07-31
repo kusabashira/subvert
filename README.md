@@ -1,8 +1,6 @@
 msub
 ====
 
-[![Build Status](https://travis-ci.org/kusabashira/msub.svg?branch=master)](https://travis-ci.org/kusabashira/msub)
-
 Substitute multiple words at once
 by FROM and TO patterns.
 
@@ -52,12 +50,12 @@ Installation
 
 ### compiled binary
 
-See [releases](https://github.com/kusabashira/msub/releases)
+See [releases](https://github.com/nil2nekoni/msub/releases)
 
 ### go get
 
 ```
-go get github.com/kusabashira/msub
+go get github.com/nil2nekoni/msub
 ```
 
 Options
@@ -167,4 +165,4 @@ MIT License
 Author
 ------
 
-kusabashira <kusabashira227@gmail.com>
+nil2 <nil2@nil2.org>
