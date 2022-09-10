@@ -50,12 +50,12 @@ Installation
 
 ### compiled binary
 
-See [releases](https://github.com/nil2nekoni/msub/releases)
+See [releases](https://github.com/nil-two/msub/releases)
 
 ### go get
 
 ```
-go get github.com/nil2nekoni/msub
+go get github.com/nil-two/msub
 ```
 
 Options
